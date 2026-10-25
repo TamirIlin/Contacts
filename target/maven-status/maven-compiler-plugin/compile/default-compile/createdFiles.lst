@@ -1,0 +1,13 @@
+com\example\contacts\repository\ContactRepository.class
+com\example\contacts\ContactsApplication.class
+com\example\contacts\controller\ContactController.class
+com\example\contacts\model\Contact$ContactBuilder.class
+com\example\contacts\service\UserService$PasswordTooLongException.class
+com\example\contacts\repository\UserRepository.class
+com\example\contacts\model\User$UserBuilder.class
+com\example\contacts\service\ContactService.class
+com\example\contacts\service\UserService$DuplicateLoginException.class
+com\example\contacts\service\UserService.class
+com\example\contacts\model\User.class
+com\example\contacts\controller\UserController.class
+com\example\contacts\model\Contact.class

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Вход</title>
+    </head>
+    <body>
+        <h1>Вход в аккаунт</h1>
+
+        <p th:if="${registeredLogin != null}">
+            Регистрация завершена. Теперь войдите под логином
+            <strong th:text="${registeredLogin}">login</strong>.
+        </p>
+        <p th:if="${param.logout}">Вы вышли из аккаунта.</p>
+
+        <form
+            th:action="@{/login}"
+            th:object="${user}"
+            method="post"
+            novalidate
+        >
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p
+                    th:each="error : ${#fields.globalErrors()}"
+                    th:text="${error}"
+                >
+                    Неверный логин или пароль
+                </p>
+            </div>
+
+            <p>
+                <label for="login">Логин</label><br />
+                <input type="text" id="login" th:field="*{login}" />
+            </p>
+            <p th:if="${#fields.hasErrors('login')}" th:errors="*{login}">
+                Ошибка
+            </p>
+
+            <p>
+                <label for="password">Пароль</label><br />
+                <input type="password" id="password" th:field="*{password}" />
+            </p>
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                Ошибка
+            </p>
+
+            <button type="submit">Войти</button>
+        </form>
+
+        <p>Нет аккаунта? <a th:href="@{/register}">Зарегистрироваться</a></p>
+    </body>
+</html>

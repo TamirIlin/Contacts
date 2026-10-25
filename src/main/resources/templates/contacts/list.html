@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Личные контакты</title>
+    </head>
+    <body>
+        <header>
+            <a th:href="@{/contacts}">Личные контакты</a>
+            <span th:text="${session.userLogin}">login</span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Выйти</button>
+            </form>
+        </header>
+
+        <main>
+            <h1>Мои контакты</h1>
+            <p>
+                Найдено: <strong th:text="${#lists.size(contacts)}">0</strong>
+            </p>
+            <p><a th:href="@{/contacts/new}">Добавить контакт</a></p>
+
+            <p th:if="${success}" th:text="${success}">Готово</p>
+            <p th:if="${error}" th:text="${error}">Ошибка</p>
+
+            <form th:action="@{/contacts}" method="get">
+                <p>
+                    <label for="search">Поиск по имени</label><br />
+                    <input
+                        type="search"
+                        id="search"
+                        name="search"
+                        th:value="${search}"
+                    />
+                </p>
+                <p>
+                    <label for="type">Тип контакта</label><br />
+                    <select id="type" name="type">
+                        <option value="">Все типы</option>
+                        <option
+                            th:each="contactType : ${contactTypes}"
+                            th:value="${contactType}"
+                            th:text="${contactType}"
+                            th:selected="${contactType == selectedType}"
+                        >
+                            Друг
+                        </option>
+                    </select>
+                </p>
+                <button type="submit">Найти</button>
+                <a th:href="@{/contacts}">Сбросить</a>
+            </form>
+
+            <div th:if="${!#lists.isEmpty(contacts)}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Телефон</th>
+                            <th>Тип</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="contact : ${contacts}">
+                            <td th:text="${contact.name}">Имя</td>
+                            <td>
+                                <a
+                                    th:href="|tel:${contact.phone}|"
+                                    th:text="${contact.phone}"
+                                    >+7 900 000-00-00</a
+                                >
+                            </td>
+                            <td th:text="${contact.type}">Друг</td>
+                            <td>
+                                <a
+                                    th:href="@{/contacts/{id}/edit(id=${contact.id})}"
+                                    >Изменить</a
+                                >
+                                <form
+                                    th:action="@{/contacts/{id}/delete(id=${contact.id})}"
+                                    method="post"
+                                    onsubmit="
+                                        return confirm('Удалить этот контакт?');
+                                    "
+                                >
+                                    <button type="submit">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${#lists.isEmpty(contacts)}">
+                <h2>Контакты не найдены</h2>
+                <p th:if="${search != '' or selectedType != null}">
+                    Попробуйте изменить запрос или сбросить фильтр.
+                </p>
+                <p th:if="${search == '' and selectedType == null}">
+                    В вашем справочнике пока нет контактов.
+                </p>
+                <p th:if="${search == '' and selectedType == null}">
+                    <a th:href="@{/contacts/new}">Добавить первый контакт</a>
+                </p>
+            </div>
+        </main>
+    </body>
+</html>

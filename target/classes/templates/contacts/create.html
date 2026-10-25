@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новый контакт — Личные контакты</title>
+</head>
+<body>
+<header>
+    <a th:href="@{/contacts}">Личные контакты</a>
+    <span th:text="${session.userLogin}">login</span>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Выйти</button>
+    </form>
+</header>
+
+<main>
+    <p><a th:href="@{/contacts}">Назад к контактам</a></p>
+
+    <h1>Новый контакт</h1>
+
+    <form th:action="@{/contacts}" th:object="${contact}" method="post" novalidate>
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}">Ошибка</p>
+        </div>
+
+        <p>
+            <label for="name">Имя</label><br>
+            <input type="text" id="name" th:field="*{name}" maxlength="100">
+        </p>
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка</p>
+
+        <p>
+            <label for="phone">Телефон</label><br>
+            <input type="tel" id="phone" th:field="*{phone}" maxlength="30">
+        </p>
+        <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Ошибка</p>
+
+        <p>
+            <label for="type">Тип контакта</label><br>
+            <select id="type" th:field="*{type}">
+                <option value="" disabled>Выберите тип</option>
+                <option th:each="contactType : ${contactTypes}"
+                        th:value="${contactType}"
+                        th:text="${contactType}">
+                    Друг
+                </option>
+            </select>
+        </p>
+        <p th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Ошибка</p>
+
+        <button type="submit">Сохранить</button>
+        <a th:href="@{/contacts}">Отмена</a>
+    </form>
+</main>
+</body>
+</html>
