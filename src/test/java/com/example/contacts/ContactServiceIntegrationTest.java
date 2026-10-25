@@ -4,6 +4,7 @@ import com.example.contacts.model.Contact;
 import com.example.contacts.model.User;
 import com.example.contacts.service.ContactService;
 import com.example.contacts.service.UserService;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,9 @@ class ContactServiceIntegrationTest {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private Validator validator;
 
     @Test
     void registrationStoresHashedPasswordAndAllowsAuthentication() {
@@ -45,6 +49,17 @@ class ContactServiceIntegrationTest {
 
         assertThatThrownBy(() -> userService.register(oversized))
                 .isInstanceOf(UserService.PasswordTooLongException.class);
+    }
+
+    @Test
+    void phoneFormatIsValidated() {
+        Contact valid = buildContact("Анна", "+7 (900) 111-22-33", "Друг");
+        Contact invalid = buildContact("Анна", "abc", "Друг");
+
+        assertThat(validator.validate(valid)).isEmpty();
+        assertThat(validator.validate(invalid))
+                .extracting(violation -> violation.getPropertyPath().toString())
+                .containsExactly("phone");
     }
 
     @Test

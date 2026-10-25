@@ -34,6 +34,10 @@ public class Contact {
 
     @NotBlank(message = "Введите телефон")
     @Size(max = 30, message = "Телефон не должен быть длиннее 30 символов")
+    @Pattern(
+            regexp = "^(?=(?:\\D*\\d){10,15}\\D*$)\\+?[\\d\\s()\\-]{10,30}$",
+            message = "Введите корректный номер телефона"
+    )
     @Column(nullable = false, length = 30)
     private String phone;
 
